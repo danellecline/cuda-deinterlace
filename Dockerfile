@@ -1,5 +1,4 @@
-ARG TAG
-FROM nvidia/cuda:$TAG
+FROM nvidia/cuda:10.1-devel-ubuntu18.04
 
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,video,utility
@@ -17,26 +16,23 @@ RUN apt-get update -qq && apt-get -y install \
     yasm \
     git
 
-RUN wget -O nv-codec-headers.tar.gz https://github.com/FFmpeg/nv-codec-headers/archive/master.tar.gz && \
-    mkdir nv-codec-headers && cd nv-codec-headers && tar -xzvf ../nv-codec-headers.tar.gz --strip-components=1 && rm ../nv-codec-headers.tar.gz && \
-    make && make install
-
-RUN git clone https://github.com/FFmpeg/FFmpeg.git ffmpeg
-
 WORKDIR /tmp/ffmpeg
 
-RUN git checkout n4.4-dev
+RUN git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git && cd nv-codec-headers && git checkout n9.1.23.1 && make && make install
 
-RUN ./configure \
+RUN git clone https://github.com/FFmpeg/FFmpeg.git ffmpeg && cd ffmpeg && git checkout n4.3.1 && ./configure \
     --disable-ffplay \
     --disable-doc \
     --disable-devices \
-    --enable-cuda \
+    --enable-cuda-sdk \
     --enable-cuvid \
     --enable-nvenc \
     --enable-nonfree \
+    --enable-libnpp \
+    --enable-cuda-nvcc \
+    --enable-cuda-llvm \
     --extra-cflags='-I/usr/local/cuda/include' \
     --extra-ldflags='-L/usr/local/cuda/lib64' \
-    --enable-cuda-nvcc
+     &&  make -j$(nproc --all) && make install
 
-RUN make -j$(nproc --all) && make install
+#RUN rm -rf /tmp/ffmpeg
