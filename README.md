@@ -34,17 +34,19 @@ CUDA_VISIBLE_DEVICES=0  Run on device 0
 
 ```
 docker run -e CUDA_VISIBLE_DEVICES=0 -it -v $PWD:/io --rm mbari/cuda-deinterlace:10.1 \
-	ffmpeg -y -i /io/D0569_20131213T224337Z_00-00-01-00TC_prores.mov \
-        -c:v h264_nvenc -preset slow -movflags faststart -vf bwdif=0,format=yuv420p -movflags faststart \
+	ffmpeg -y -hwaccel cuvid -i /io/D0569_20131213T224337Z_00-00-01-00TC_prores.mov \
+        -map_metadata 0:g -c:v h264_nvenc -preset slow -movflags faststart \
+	-vf bwdif=0,format=yuv420p -movflags faststart \
 	/io/bwdifD0569_20131213T224337Z_00-00-01-00TC_h264.mp4
 ```
 
-Convert prores to deinterlaced prores using the bwdif filter 
+Convert prores to deinterlaced prores using the bwdif filter. 
+Prores does not currently have encode/decode CUDA support 
 
 ```
-docker run -e CUDA_VISIBLE_DEVICES=0 -it -v $PWD:/io --rm mbari/cuda-deinterlace:10.1 \
-	ffmpeg -y -hwaccel cuvid -deint adaptive -i /io/D0569_20131213T224337Z_00-00-01-00TC_prores.mov \
-        -c:v prores -vf bwdif=0,format=yuv420p -movflags faststart \
+docker run -it -v $PWD:/io --rm mbari/cuda-deinterlace:10.1 \
+	ffmpeg -y -i /io/D0569_20131213T224337Z_00-00-01-00TC_prores.mov \
+        -map_metadata 0:g -c:v prores -vf bwdif=0,format=yuv420p -movflags faststart \
 	/io/bwdifD0569_20131213T224337Z_00-00-01-00TC_h264.mov
 ```
 
