@@ -44,7 +44,7 @@ Convert prores to deinterlaced prores using the bwdif filter
 ```
 docker run -e CUDA_VISIBLE_DEVICES=0 -it -v $PWD:/io --rm mbari/cuda-deinterlace:10.1 \
 	ffmpeg -y -hwaccel cuvid -deint adaptive -i /io/D0569_20131213T224337Z_00-00-01-00TC_prores.mov \
-        -c:v prores -preset slow -vf bwdif=0,format=yuv420p -movflags faststart \
+        -c:v prores -vf bwdif=0,format=yuv420p -movflags faststart \
 	/io/bwdifD0569_20131213T224337Z_00-00-01-00TC_h264.mov
 ```
 
