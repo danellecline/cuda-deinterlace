@@ -1,9 +1,5 @@
 {
     "branch": "master",
-    "verifyConditions": {                                                                                                                             
-        "path": "semantic-release-docker",
-        "registryUrl": "docker.io"                                                                                                                    
-    },             
     "plugins": [
         "commitizen",
         "@semantic-release/commit-analyzer",
