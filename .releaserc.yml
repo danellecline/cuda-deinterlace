@@ -22,19 +22,6 @@
                     "CHANGELOG.md"
                 ]
             }
-        ],
-        "semantic-release-docker",                                                                                                                    
-        [                                                                                                                                             
-            "@semantic-release/exec",                                                                                                                 
-            {                                                                                                                                         
-                "prepareCmd": "docker build -t mbari/cuda-deinterlace:10.1 ."
-            }                                                                                                                                         
-        ],                                                                                                                                            
-    ],                                                                                                                                                
-    "publish": [                                                                                                                                      
-        {                                                                                                                                             
-            "path": "semantic-release-docker",                                                                                                        
-            "name": "mbari/cuda-deinterlace:10.1"
-         }                                                                                                                                             
-    ] 
+        ]
+    ]                                                                                                                                                
 }

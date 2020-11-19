@@ -34,6 +34,13 @@ Convert prores to deinterlaced compressed h264
 
 ```
 docker run -e CUDA_VISIBLE_DEVICES=0 -it -u $(id -u):$(id -g) \
+	-v $PWD:/io -v /mnt/M3/:/mnt/M3 --rm mbari/cuda-deinterlace:10.1 \
+	ffmpeg -y -hwaccel cuvid -i /mnt/M3/master/DocRicketts/2016/11/0904/D0904_20161113T020253Z_prores.mov \
+        -map_metadata 0:g -c:v h264_nvenc -preset slow -movflags faststart \
+	-vf bwdif=0,format=yuv420p -movflags faststart \
+	/io/bwdifD0569_20131213T224337Z_00-00-01-00TC_h264.mp4
+
+docker run -e CUDA_VISIBLE_DEVICES=0 -it -u $(id -u):$(id -g) \
 	-v $PWD:/io --rm mbari/cuda-deinterlace:10.1 \
 	ffmpeg -y -hwaccel cuvid -i /io/D0569_20131213T224337Z_00-00-01-00TC_prores.mov \
         -map_metadata 0:g -c:v h264_nvenc -preset slow -movflags faststart \
